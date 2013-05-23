@@ -54,3 +54,49 @@ now_derek.move()
 old_derek = manager.reset(now_derek, 0)
 old_derek.move()
 console.log old_derek.age
+
+
+# Tests from README
+
+vdvc = require './vdvc'
+
+# Initialize a manager
+manager = vdvc.new()
+
+# Create a sample object
+derek =
+  name: 'Derek'
+  age: '20'
+  speak: () ->
+    console.log 'Yo how is it going?'
+
+tom =
+  name: 'Tom'
+  age: '24'
+  speak: () ->
+    console.log 'Not bad.'
+
+# Add
+manager.add derek, tom
+
+# Commit
+manager.commit()
+
+# Time goes on
+derek.age = '40'
+
+# Tom becomes rude
+tom.speak = () ->
+  console.log 'Bullshit'
+
+# Add
+manager.add derek, tom
+
+# Commit
+manager.commit()
+
+prev_derek = manager.prev derek
+console.log prev_derek.age # 20
+
+prev_tom = manager.prev tom
+prev_tom.speak() # 'Not bad.'
