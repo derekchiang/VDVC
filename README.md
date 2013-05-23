@@ -21,16 +21,16 @@ Think of a manager as a repository.
 ```coffeescript
 # Create a sample object
 derek =
-    name: 'Derek'
-    age: '20'
-    speak: () ->
-        console.log 'Yo how is it going?'
+  name: 'Derek'
+  age: '20'
+  speak: () ->
+    console.log 'Yo how is it going?'
 
 tom =
-    name: 'Tom'
-    age: '24'
-    speak: () ->
-        console.log 'Not bad.'
+  name: 'Tom'
+  age: '24'
+  speak: () ->
+    console.log 'Not bad.'
 
 # Add
 manager.add derek tom
@@ -47,7 +47,7 @@ derek.age = '40'
 
 # Tom becomes rude
 tom.speak = () ->
-    console.log 'Bullshit'
+  console.log 'Bullshit'
 
 # Add
 manager.add derek tom
