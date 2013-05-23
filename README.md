@@ -1,6 +1,6 @@
 # VDVC
 
-VDVC is a Very Dumb Version Control module.
+VDVC is a Very Dumb Version Control module, written in CoffeeScript.
 
 ## Usage
 
