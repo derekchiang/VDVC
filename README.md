@@ -65,3 +65,10 @@ prev_tom.speak() # 'Not bad.'
 ## Limits
 
 Because of the limits of JavaScript itself, some objects cannot be fully cloned, and therefore cannot be fully versioned.  The manager object returned by `new()`, for example, is not fully version-able, because it makes use of [private members and privileged methods](http://javascript.crockford.com/private.html).
+
+## Roadmap
+
+These are not plans, but rather just possibilities.
+
+1. Add more methods
+2. Make it possible to use a real DB as backend.
