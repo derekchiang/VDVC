@@ -1,62 +1,84 @@
 jquery = require 'jquery'
 
 class Manager
-  buffer: {}
-  store: {}
-
-  clone: (obj) ->
-    return jquery.extend(true, {}, obj)
-
   constructor: () ->
-    this.next_id = 0
+    # Private fields
 
-  objectId: (obj) ->
-    if not obj?
-      return null
-    else
-      if not obj.__id?
-        obj.__id = this.next_id++
-      return obj.__id
+    next_id = 0
 
-  add: (objects...) ->
-    for obj in objects
-      this.buffer[this.objectId(obj)] = this.clone(obj)
+    # Temporary buffer for holding
+    # added but not commited objects
+    buffer = {}
 
-  commit: () ->
-    console.log this.buffer
-    for key, value of this.buffer
-      console.log key
-      if this.store[key]?
-        this.store[key].push(value)
+    # Storing all tracked objects
+    store = {}
+
+    # Private methods
+    getObjectArr = (obj) ->
+      return store[objectId(obj)]
+
+
+    objectId = (obj) ->
+      if not obj?
+        return null
       else
-        this.store[key] = [value]
-      value.commitId = this.store[key].length - 1
+        if not obj.__id?
+          obj.__id = this.next_id++
+        return obj.__id
 
-  prev: (obj) ->
-    objectArr = this.store[this.objectId(obj)]
-    if objectArr
-      if obj.commitId?
-        if obj.commitId == 0
-          throw "It's already the earliest version"
+    # Privileged methods
+    this.clone = (obj) ->
+      return jquery.extend(true, {}, obj)      
+
+    # Add objects to be ready for commit
+    this.add = (objects...) ->
+      for obj in objects
+        buffer[objectId(obj)] = this.clone(obj)
+
+    # Commit all changes
+    this.commit = () ->
+      for key, value of buffer
+        if store[key]?
+          store[key].push(value)
         else
-          return objectArr[obj.commitId - 1]
-      else
-        # If no commitId, then it's the latest version
-        console.log objectArr
-        # Second to last element would be the previous version
-        return objectArr[objectArr.length - 2]
-    else
-      throw "Object not versioned"
+          store[key] = [value]
+        value.commitId = store[key].length - 1
+      console.log store
 
-  next: (obj) ->
-    objectArr = this.store[this.objectId(obj)]
-    if objectArr
-      if not obj.commitId? or obj.commitId == objectArr.length - 1
-        throw "It's already the latest version"
+    # Return the previous commit
+    this.prev = (obj) ->
+      objectArr = getObjectArr obj
+      if objectArr
+        if obj.commitId?
+          if obj.commitId == 0
+            throw "It's already the earliest version"
+          else
+            return objectArr[obj.commitId - 1]
+        else
+          # If no commitId, then it's the latest version
+          # Second to last element would be the previous version
+          return objectArr[objectArr.length - 2]
       else
-        return objectArr[obj.commitId + 1]
-    else
-      throw "Object not versioned"
+        throw "Object not versioned"
+
+    # Return the next commit
+    this.next = (obj) ->
+      objectArr = getObjectArr obj
+      if objectArr
+        if not obj.commitId? or obj.commitId == objectArr.length - 1
+          throw "It's already the latest version"
+        else
+          return objectArr[obj.commitId + 1]
+      else
+        throw "Object not versioned"
+
+    # Return to a particular commit
+    this.reset = (obj, commitId) ->
+      objectArr = getObjectArr obj
+      if 0 <= commitId < objectArr.length
+        return objectArr[commitId]
+      else
+        throw "Invalid commit id"
 
 module.exports.new = () ->
   return (new Manager)

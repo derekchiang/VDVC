@@ -20,12 +20,22 @@ derek.move()
 manager.add derek
 manager.commit()
 
+# Version a manager itself
+
+sec_manager = vdvc.new()
+
+sec_manager.add(manager)
+sec_manager.commit()
+
 derek.age = 20
 manager.add(derek)
 manager.commit()
 prev_derek = manager.prev(derek)
 console.log prev_derek.age
 prev_derek.move()
+
+sec_manager.add(manager)
+sec_manager.commit()
 
 now_derek = manager.next(prev_derek)
 console.log now_derek.age
@@ -34,3 +44,13 @@ now_derek.move()
 prev_derek = manager.prev(prev_derek)
 console.log prev_derek.age
 prev_derek.move()
+
+prev_manager = sec_manager.prev(manager)
+
+now_derek = prev_manager.next(prev_derek)
+console.log now_derek.age
+now_derek.move()
+
+old_derek = manager.reset(now_derek, 0)
+old_derek.move()
+console.log old_derek.age

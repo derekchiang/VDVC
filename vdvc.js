@@ -6,94 +6,96 @@
   jquery = require('jquery');
 
   Manager = (function() {
-    Manager.prototype.buffer = {};
-
-    Manager.prototype.store = {};
-
-    Manager.prototype.clone = function(obj) {
-      return jquery.extend(true, {}, obj);
-    };
-
     function Manager() {
-      this.next_id = 0;
-    }
+      var buffer, getObjectArr, next_id, objectId, store;
 
-    Manager.prototype.objectId = function(obj) {
-      if (obj == null) {
-        return null;
-      } else {
-        if (obj.__id == null) {
-          obj.__id = this.next_id++;
-        }
-        return obj.__id;
-      }
-    };
-
-    Manager.prototype.add = function() {
-      var obj, objects, _i, _len, _results;
-
-      objects = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      _results = [];
-      for (_i = 0, _len = objects.length; _i < _len; _i++) {
-        obj = objects[_i];
-        _results.push(this.buffer[this.objectId(obj)] = this.clone(obj));
-      }
-      return _results;
-    };
-
-    Manager.prototype.commit = function() {
-      var key, value, _ref, _results;
-
-      console.log(this.buffer);
-      _ref = this.buffer;
-      _results = [];
-      for (key in _ref) {
-        value = _ref[key];
-        console.log(key);
-        if (this.store[key] != null) {
-          this.store[key].push(value);
+      next_id = 0;
+      buffer = {};
+      store = {};
+      getObjectArr = function(obj) {
+        return store[objectId(obj)];
+      };
+      objectId = function(obj) {
+        if (obj == null) {
+          return null;
         } else {
-          this.store[key] = [value];
+          if (obj.__id == null) {
+            obj.__id = this.next_id++;
+          }
+          return obj.__id;
         }
-        _results.push(value.commitId = this.store[key].length - 1);
-      }
-      return _results;
-    };
+      };
+      this.clone = function(obj) {
+        return jquery.extend(true, {}, obj);
+      };
+      this.add = function() {
+        var obj, objects, _i, _len, _results;
 
-    Manager.prototype.prev = function(obj) {
-      var objectArr;
+        objects = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        _results = [];
+        for (_i = 0, _len = objects.length; _i < _len; _i++) {
+          obj = objects[_i];
+          _results.push(buffer[objectId(obj)] = this.clone(obj));
+        }
+        return _results;
+      };
+      this.commit = function() {
+        var key, value;
 
-      objectArr = this.store[this.objectId(obj)];
-      if (objectArr) {
-        if (obj.commitId != null) {
-          if (obj.commitId === 0) {
-            throw "It's already the earliest version";
+        for (key in buffer) {
+          value = buffer[key];
+          if (store[key] != null) {
+            store[key].push(value);
           } else {
-            return objectArr[obj.commitId - 1];
+            store[key] = [value];
+          }
+          value.commitId = store[key].length - 1;
+        }
+        return console.log(store);
+      };
+      this.prev = function(obj) {
+        var objectArr;
+
+        objectArr = getObjectArr(obj);
+        if (objectArr) {
+          if (obj.commitId != null) {
+            if (obj.commitId === 0) {
+              throw "It's already the earliest version";
+            } else {
+              return objectArr[obj.commitId - 1];
+            }
+          } else {
+            return objectArr[objectArr.length - 2];
           }
         } else {
-          console.log(objectArr);
-          return objectArr[objectArr.length - 2];
+          throw "Object not versioned";
         }
-      } else {
-        throw "Object not versioned";
-      }
-    };
+      };
+      this.next = function(obj) {
+        var objectArr;
 
-    Manager.prototype.next = function(obj) {
-      var objectArr;
-
-      objectArr = this.store[this.objectId(obj)];
-      if (objectArr) {
-        if ((obj.commitId == null) || obj.commitId === objectArr.length - 1) {
-          throw "It's already the latest version";
+        objectArr = getObjectArr(obj);
+        if (objectArr) {
+          if ((obj.commitId == null) || obj.commitId === objectArr.length - 1) {
+            throw "It's already the latest version";
+          } else {
+            return objectArr[obj.commitId + 1];
+          }
         } else {
-          return objectArr[obj.commitId + 1];
+          throw "Object not versioned";
         }
-      } else {
-        throw "Object not versioned";
-      }
-    };
+      };
+      this.reset = function(obj, commitId) {
+        var objectArr;
+
+        objectArr = getObjectArr(obj);
+        if ((0 <= commitId && commitId < objectArr.length)) {
+          return objectArr[commitId];
+        } else {
+          throw "Invalid commit id";
+        }
+      };
+    }
 
     return Manager;
 
