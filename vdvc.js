@@ -20,7 +20,7 @@
           return null;
         } else {
           if (obj.__id == null) {
-            obj.__id = this.next_id++;
+            obj.__id = next_id++;
           }
           return obj.__id;
         }
@@ -51,7 +51,7 @@
           }
           value.commitId = store[key].length - 1;
         }
-        return console.log(store);
+        return buffer = {};
       };
       this.prev = function(obj) {
         var objectArr;

@@ -23,7 +23,7 @@ class Manager
         return null
       else
         if not obj.__id?
-          obj.__id = this.next_id++
+          obj.__id = next_id++
         return obj.__id
 
     # Privileged methods
@@ -43,7 +43,7 @@ class Manager
         else
           store[key] = [value]
         value.commitId = store[key].length - 1
-      console.log store
+      buffer = {}
 
     # Return the previous commit
     this.prev = (obj) ->
