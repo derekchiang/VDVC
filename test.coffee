@@ -58,10 +58,14 @@ console.log old_derek.age
 
 # Tests from README
 
+# Import module
+# Assuming `vdvc.js` is in the current directory
 vdvc = require './vdvc'
 
 # Initialize a manager
 manager = vdvc.new()
+
+# Think of a manager as a repository.
 
 # Create a sample object
 derek =
@@ -82,6 +86,8 @@ manager.add derek, tom
 # Commit
 manager.commit()
 
+# Now the two objects are versioned.  Let's make some changes to them:
+
 # Time goes on
 derek.age = '40'
 
@@ -95,6 +101,9 @@ manager.add derek, tom
 # Commit
 manager.commit()
 
+# Now, let's go back to previous versions:
+
+# Go back to previous commit
 prev_derek = manager.prev derek
 console.log prev_derek.age # 20
 
