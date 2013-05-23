@@ -2,6 +2,8 @@
 
 VDVC is a Very Dumb Version Control module, written in CoffeeScript.
 
+VDVC is under development.  APIs may change at any time.
+
 ## Usage
 
 VDVC tries to mimic git.
