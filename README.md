@@ -6,17 +6,17 @@ VDVC is a Very Dumb Version Control module.
 
 VDVC tries to mimic git.
     
-    ```coffeescript
+```coffeescript
     # Import module
     vdvc = require 'vdvc'
 
     # Initialize a manager
     manager = vdvc.new()
-    ```
+```
 
 Think of a manager as a repository.
 
-    ```coffeescript
+```coffeescript
     # Create a sample object
     derek =
         name: 'Derek'
@@ -35,11 +35,11 @@ Think of a manager as a repository.
 
     # Commit
     manager.commit()
-    ```
+```
 
 Now the two objects are versioned.  Let's make some changes to them:
     
-    ```coffeescript
+```coffeescript
     # Time goes on
     derek.age = '40'
 
@@ -52,15 +52,15 @@ Now the two objects are versioned.  Let's make some changes to them:
 
     # Commit
     manager.commit()
-    ```
+```
 
 Now, let's go back to previous versions:
 
-    ```coffeescript
+```coffeescript
     # Go back to previous commit
     prev_derek = manager.prev(derek)
     console.log prev_derek.age # 20
 
     prev_tom = manager.prev(tom)
     prev_tom.speak # 'Not bad.'
-    ```
+```
