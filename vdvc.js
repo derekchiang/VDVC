@@ -116,6 +116,10 @@
           return obj.__id;
         }
       };
+      this.makeClean = function(obj) {
+        delete obj.__id;
+        return delete obj.__commitId;
+      };
       this.clone = function(obj) {
         return extend(true, {}, obj);
       };
@@ -140,7 +144,7 @@
           } else {
             store[key] = [value];
           }
-          value.commitId = store[key].length - 1;
+          value.__commitId = store[key].length - 1;
         }
         return buffer = {};
       };
@@ -149,11 +153,11 @@
 
         objectArr = getObjectArr(obj);
         if (objectArr) {
-          if (obj.commitId != null) {
-            if (obj.commitId === 0) {
+          if (obj.__commitId != null) {
+            if (obj.__commitId === 0) {
               throw "It's already the earliest version";
             } else {
-              return objectArr[obj.commitId - 1];
+              return objectArr[obj.__commitId - 1];
             }
           } else {
             return objectArr[objectArr.length - 2];
@@ -167,16 +171,19 @@
 
         objectArr = getObjectArr(obj);
         if (objectArr) {
-          if ((obj.commitId == null) || obj.commitId === objectArr.length - 1) {
+          if ((obj.__commitId == null) || obj.__commitId === objectArr.length - 1) {
             throw "It's already the latest version";
           } else {
-            return objectArr[obj.commitId + 1];
+            return objectArr[obj.__commitId + 1];
           }
         } else {
           throw "Object not versioned";
         }
       };
-      this.reset = function(obj, commitId) {
+      this.reset = function() {
+        return buffer = {};
+      };
+      this.getVersion = function(obj, commitId) {
         var objectArr;
 
         objectArr = getObjectArr(obj);
@@ -185,6 +192,13 @@
         } else {
           throw "Invalid commit id";
         }
+      };
+      this.getCleanVersion = function(obj, commitId) {
+        var anotherObj;
+
+        anotherObj = this.getVersion(obj, commitId);
+        makeClean(anotherObj);
+        return anotherObj;
       };
     }
 

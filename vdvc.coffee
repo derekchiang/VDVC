@@ -91,7 +91,6 @@ extend = ->
 class Manager
   constructor: () ->
     # Private fields
-
     next_id = 0
 
     # Temporary buffer for holding
@@ -105,7 +104,6 @@ class Manager
     getObjectArr = (obj) ->
       return store[objectId(obj)]
 
-
     objectId = (obj) ->
       if not obj?
         return null
@@ -115,33 +113,42 @@ class Manager
         return obj.__id
 
     # Privileged methods
-    this.clone = (obj) ->
+
+    # Delete two properties from the given object:
+    # `__id` and `__commitId`.  These two properties
+    # are appened to the object by VDVC.
+    @makeClean = (obj) ->
+      delete obj.__id
+      delete obj.__commitId
+
+    # Return a deeply cloned copy of the given object
+    @clone = (obj) ->
       return extend(true, {}, obj)      
 
     # Add objects to be ready for commit
-    this.add = (objects...) ->
+    @add = (objects...) ->
       for obj in objects
-        buffer[objectId(obj)] = this.clone(obj)
+        buffer[objectId(obj)] = @clone(obj)
 
     # Commit all changes
-    this.commit = () ->
+    @commit = () ->
       for key, value of buffer
         if store[key]?
           store[key].push(value)
         else
           store[key] = [value]
-        value.commitId = store[key].length - 1
+        value.__commitId = store[key].length - 1
       buffer = {}
 
     # Return the previous commit
-    this.prev = (obj) ->
+    @prev = (obj) ->
       objectArr = getObjectArr obj
       if objectArr
-        if obj.commitId?
-          if obj.commitId == 0
+        if obj.__commitId?
+          if obj.__commitId == 0
             throw "It's already the earliest version"
           else
-            return objectArr[obj.commitId - 1]
+            return objectArr[obj.__commitId - 1]
         else
           # If no commitId, then it's the latest version
           # Second to last element would be the previous version
@@ -150,23 +157,39 @@ class Manager
         throw "Object not versioned"
 
     # Return the next commit
-    this.next = (obj) ->
+    @next = (obj) ->
       objectArr = getObjectArr obj
       if objectArr
-        if not obj.commitId? or obj.commitId == objectArr.length - 1
+        if not obj.__commitId? or obj.__commitId == objectArr.length - 1
           throw "It's already the latest version"
         else
-          return objectArr[obj.commitId + 1]
+          return objectArr[obj.__commitId + 1]
       else
         throw "Object not versioned"
 
+    # Cancel uncommitted but added changes
+    @reset = () ->
+      buffer = {}
+
     # Return to a particular commit
-    this.reset = (obj, commitId) ->
+    @getVersion = (obj, commitId) ->
       objectArr = getObjectArr obj
       if 0 <= commitId < objectArr.length
         return objectArr[commitId]
       else
         throw "Invalid commit id"
+
+    # Has the same effect as `getVersion()`, except that it will
+    # return a clean version that will actually be
+    # deeply equal to the previous version.  However,
+    # if you version the returned object again, it
+    # will be treated as a new object.  The returned object
+    # also won't work with prev or next.
+    # When in doubt, you should just use `getVersion()`
+    @getCleanVersion = (obj, commitId) ->
+      anotherObj = @getVersion obj, commitId
+      makeClean(anotherObj)
+      return anotherObj
 
 module.exports.new = () ->
   return (new Manager)
