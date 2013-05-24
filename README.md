@@ -66,6 +66,8 @@ prev_tom.speak() # 'Not bad.'
 
 Because of the limits of JavaScript itself, some objects cannot be fully cloned, and therefore cannot be fully versioned.  The manager object returned by `new()`, for example, is not fully version-able, because it makes use of [private members and privileged methods](http://javascript.crockford.com/private.html).
 
+Furthermore, VDVC appends an attribute "__id" to an object when it's called with `add()`, and appends "__commitId" when it's called with `commit()`.  What this means is that, if you compare a previous version of an object returned by VDVC with the actual previous object, they might not be deeply equal, because of the two additional attributes.  That said, this shouldn't matter in most scenarios.
+
 ## Roadmap
 
 These are not plans, but rather just possibilities.
