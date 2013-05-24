@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>vdvc.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="test.html">
+                test.coffee
+              </a>
+            
+              
+              <a class="source" href="vdvc.html">
+                vdvc.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>vdvc.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>The extend method is adopted from: <a href="https://github.com/dansdom/extend">https://github.com/dansdom/extend</a>
+translated using js2coffee</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">extend</span></span> = -&gt;
+  options = <span class="literal">undefined</span>
+  name = <span class="literal">undefined</span>
+  src = <span class="literal">undefined</span>
+  copy = <span class="literal">undefined</span>
+  copyIsArray = <span class="literal">undefined</span>
+  clone = <span class="literal">undefined</span>
+  target = arguments[<span class="number">0</span>] <span class="keyword">or</span> {}
+  i = <span class="number">1</span>
+  length = arguments.length
+  deep = <span class="literal">false</span>
+  objectHelper =</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>helper which replicates the jquery internal functions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    hasOwn: Object::hasOwnProperty
+    class2type: {}
+    type: (obj) -&gt;
+      (<span class="keyword">if</span> <span class="keyword">not</span> obj? <span class="keyword">then</span> String(obj) <span class="keyword">else</span> objectHelper.class2type[Object::toString.call(obj)] <span class="keyword">or</span> <span class="string">"object"</span>)
+
+    isPlainObject: (obj) -&gt;
+      <span class="keyword">return</span> <span class="literal">false</span>  <span class="keyword">if</span> <span class="keyword">not</span> obj <span class="keyword">or</span> objectHelper.type(obj) <span class="keyword">isnt</span> <span class="string">"object"</span> <span class="keyword">or</span> obj.nodeType <span class="keyword">or</span> objectHelper.isWindow(obj)
+      <span class="keyword">try</span>
+        <span class="keyword">return</span> <span class="literal">false</span>  <span class="keyword">if</span> obj.constructor <span class="keyword">and</span> <span class="keyword">not</span> objectHelper.hasOwn.call(obj, <span class="string">"constructor"</span>) <span class="keyword">and</span> <span class="keyword">not</span> objectHelper.hasOwn.call(obj.constructor::, <span class="string">"isPrototypeOf"</span>)
+      <span class="keyword">catch</span> e
+        <span class="keyword">return</span> <span class="literal">false</span>
+      key = <span class="literal">undefined</span>
+      <span class="keyword">for</span> key <span class="keyword">of</span> obj
+        {}
+        
+      key <span class="keyword">is</span> `<span class="javascript"><span class="literal">undefined</span></span>` <span class="keyword">or</span> objectHelper.hasOwn.call(obj, key)
+
+    isArray: Array.isArray <span class="keyword">or</span> (obj) -&gt;
+      objectHelper.type(obj) <span class="keyword">is</span> <span class="string">"array"</span>
+
+    isFunction: (obj) -&gt;
+      objectHelper.type(obj) <span class="keyword">is</span> <span class="string">"function"</span>
+
+    isWindow: (obj) -&gt;
+      obj? <span class="keyword">and</span> obj <span class="keyword">is</span> obj.window</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>end of objectHelper</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Handle a deep copy situation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> <span class="keyword">typeof</span> target <span class="keyword">is</span> <span class="string">"boolean"</span>
+    deep = target
+    target = arguments[<span class="number">1</span>] <span class="keyword">or</span> {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>skip the boolean and the target</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    i = <span class="number">2</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Handle case when target is a string or something (possible in deep copy)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  target = {}  <span class="keyword">if</span> <span class="keyword">typeof</span> target <span class="keyword">isnt</span> <span class="string">"object"</span> <span class="keyword">and</span> <span class="keyword">not</span> objectHelper.isFunction(target)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>If no second argument is used then this can extend an object that is using this method</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> length <span class="keyword">is</span> i
+    target = <span class="keyword">this</span>
+    --i
+  <span class="keyword">while</span> i &lt; length</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Only deal with non-null/undefined values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (options = arguments[i])?</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>extend the base object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">for</span> name <span class="keyword">of</span> options
+        src = target[name]
+        copy = options[name]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Prevent never-ending loop</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">continue</span>  <span class="keyword">if</span> target <span class="keyword">is</span> copy</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Recurse if we&#39;re merging plain objects or arrays</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> deep <span class="keyword">and</span> copy <span class="keyword">and</span> (objectHelper.isPlainObject(copy) <span class="keyword">or</span> (copyIsArray = objectHelper.isArray(copy)))
+          <span class="keyword">if</span> copyIsArray
+            copyIsArray = <span class="literal">false</span>
+            clone = (<span class="keyword">if</span> src <span class="keyword">and</span> objectHelper.isArray(src) <span class="keyword">then</span> src <span class="keyword">else</span> [])
+          <span class="keyword">else</span>
+            clone = (<span class="keyword">if</span> src <span class="keyword">and</span> objectHelper.isPlainObject(src) <span class="keyword">then</span> src <span class="keyword">else</span> {})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Never move original objects, clone them</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          target[name] = extend(deep, clone, copy)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Don&#39;t bring in undefined values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">else</span> target[name] = copy  <span class="keyword">if</span> copy <span class="keyword">isnt</span> `<span class="javascript"><span class="literal">undefined</span></span>`
+    i++</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Return the modified object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  target
+
+<span class="class"><span class="keyword">class</span> <span class="title">Manager</span></span>
+  constructor: () -&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Private fields</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    next_id = <span class="number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Temporary buffer for holding
+added but not commited objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    buffer = {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Storing all tracked objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    store = {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Private methods</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="function"><span class="title">getObjectArr</span></span> = (obj) -&gt;
+      <span class="keyword">return</span> store[objectId(obj)]
+
+    <span class="function"><span class="title">objectId</span></span> = (obj) -&gt;
+      <span class="keyword">if</span> <span class="keyword">not</span> obj?
+        <span class="keyword">return</span> <span class="literal">null</span>
+      <span class="keyword">else</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> obj.__id?
+          obj.__id = next_id++
+        <span class="keyword">return</span> obj.__id</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Privileged methods</p>
+<p>Delete two properties from the given object:
+<code>__id</code> and <code>__commitId</code>.  These two properties
+are appened to the object by VDVC.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@makeClean</span> = (obj) -&gt;
+      <span class="keyword">delete</span> obj.__id
+      <span class="keyword">delete</span> obj.__commitId</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Return a deeply cloned copy of the given object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@clone</span> = (obj) -&gt;
+      <span class="keyword">return</span> extend(<span class="literal">true</span>, {}, obj)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Add objects to be ready for commit</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@add</span> = (objects...) -&gt;
+      <span class="keyword">for</span> obj <span class="keyword">in</span> objects
+        buffer[objectId(obj)] = <span class="property">@clone</span>(obj)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Commit all changes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@commit</span> = () -&gt;
+      <span class="keyword">for</span> key, value <span class="keyword">of</span> buffer
+        <span class="keyword">if</span> store[key]?
+          store[key].push(value)
+        <span class="keyword">else</span>
+          store[key] = [value]
+        value.__commitId = store[key].length - <span class="number">1</span>
+      buffer = {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Return the previous commit</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@prev</span> = (obj) -&gt;
+      objectArr = getObjectArr obj
+      <span class="keyword">if</span> objectArr
+        <span class="keyword">if</span> obj.__commitId?
+          <span class="keyword">if</span> obj.__commitId == <span class="number">0</span>
+            <span class="keyword">throw</span> <span class="string">"It's already the earliest version"</span>
+          <span class="keyword">else</span>
+            <span class="keyword">return</span> objectArr[obj.__commitId - <span class="number">1</span>]
+        <span class="keyword">else</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>If no commitId, then it&#39;s the latest version
+Second to last element would be the previous version</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="keyword">return</span> objectArr[objectArr.length - <span class="number">2</span>]
+      <span class="keyword">else</span>
+        <span class="keyword">throw</span> <span class="string">"Object not versioned"</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Return the next commit</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@next</span> = (obj) -&gt;
+      objectArr = getObjectArr obj
+      <span class="keyword">if</span> objectArr
+        <span class="keyword">if</span> <span class="keyword">not</span> obj.__commitId? <span class="keyword">or</span> obj.__commitId == objectArr.length - <span class="number">1</span>
+          <span class="keyword">throw</span> <span class="string">"It's already the latest version"</span>
+        <span class="keyword">else</span>
+          <span class="keyword">return</span> objectArr[obj.__commitId + <span class="number">1</span>]
+      <span class="keyword">else</span>
+        <span class="keyword">throw</span> <span class="string">"Object not versioned"</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Cancel uncommitted but added changes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@reset</span> = () -&gt;
+      buffer = {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Return to a particular commit</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@getVersion</span> = (obj, commitId) -&gt;
+      objectArr = getObjectArr obj
+      <span class="keyword">if</span> <span class="number">0</span> &lt;= commitId &lt; objectArr.length
+        <span class="keyword">return</span> objectArr[commitId]
+      <span class="keyword">else</span>
+        <span class="keyword">throw</span> <span class="string">"Invalid commit id"</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Has the same effect as <code>getVersion()</code>, except that it will
+return a clean version that will actually be
+deeply equal to the previous version.  However,
+if you version the returned object again, it
+will be treated as a new object.  The returned object
+also won&#39;t work with prev or next.
+When in doubt, you should just use <code>getVersion()</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@getCleanVersion</span> = (obj, commitId) -&gt;
+      anotherObj = <span class="property">@getVersion</span> obj, commitId
+      makeClean(anotherObj)
+      <span class="keyword">return</span> anotherObj
+
+module.exports.<span class="keyword">new</span> = () -&gt;
+  <span class="keyword">return</span> (<span class="keyword">new</span> Manager)</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
