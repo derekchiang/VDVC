@@ -62,6 +62,17 @@ prev_tom = manager.prev tom
 prev_tom.speak() # 'Not bad.'
 ```
 
+## API
+
+See `docs/`.
+
+## Test
+
+1. Install [Mocha](https://github.com/visionmedia/mocha): `npm install -g mocha`
+2. Run `mocha` in the main directory.
+
+Source code for tests can be found in `test/`.
+
 ## Limits
 
 Because of the limits of JavaScript itself, some objects cannot be fully cloned, and therefore cannot be fully versioned.  The manager object returned by `new()`, for example, is not fully version-able, because it makes use of [private members and privileged methods](http://javascript.crockford.com/private.html).
