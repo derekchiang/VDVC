@@ -1,5 +1,6 @@
-# The extend method is adopted from: https://github.com/dansdom/extend
-# translated using js2coffee
+# Adopted from: https://github.com/dansdom/extend
+# Translated using js2coffee
+
 extend = ->
   options = undefined
   name = undefined
